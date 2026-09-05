@@ -18,6 +18,8 @@
   Action 固定到不可变 commit；增加 npm、Cargo 与 Actions 的 Dependabot 周更配置。
 - 修复干净 CI 的产物依赖：先构建 Chrome，再审计本次生成的三个前端目录；完整
   Windows 发布脚本仍包含 Native Host 资源审计。
+- 首次远端格式检查暴露 Windows checkout 的 CRLF 转换，新增 `.gitattributes` 固定
+  源码 LF，批处理保留 CRLF，使全新 checkout 与本地格式门禁一致。
 - 将锁文件中的已撤回 `chacha20 0.10.1` 更新为 `0.10.2`；它来自未启用的可选依赖分支，
   更新后 `cargo audit` 不再报告 yanked package。
 
