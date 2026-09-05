@@ -1,0 +1,433 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-width: 320px;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-sans);
+}
+
+.sidepanel-shell {
+  display: grid;
+  width: 100%;
+  height: 100vh;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.sidepanel-skip {
+  position: fixed;
+  z-index: 10;
+  top: 6px;
+  left: 8px;
+  padding: 6px 8px;
+  transform: translateY(-150%);
+  border-radius: 6px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 10px;
+  text-decoration: none;
+}
+
+.sidepanel-skip:focus {
+  transform: translateY(0);
+}
+
+.sidepanel-header {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 13px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.sidepanel-logo {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.sidepanel-header > div {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 1px;
+}
+
+.sidepanel-header h1,
+.sidepanel-header p {
+  margin: 0;
+}
+
+.sidepanel-header h1 {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.sidepanel-header p {
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: 9px;
+  line-height: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidepanel-model {
+  flex: 0 0 auto;
+  padding: 4px 7px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface-subtle);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 8px;
+}
+
+.sidepanel-shell > nav {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.sidepanel-shell > nav button {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.sidepanel-shell > nav button:hover,
+.sidepanel-shell > nav button.active {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.sidepanel-shell > nav button.active {
+  border-bottom-color: var(--color-primary);
+}
+
+.sidepanel-shell > nav button:focus-visible,
+.sidepanel-shell button:focus-visible,
+.sidepanel-shell input:focus-visible,
+.sidepanel-shell textarea:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.sidepanel-content {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sidepanel-content > .yanyi-conversation {
+  height: 100%;
+}
+
+.sidepanel-selection-action {
+  display: grid;
+  gap: 7px;
+  margin: 0 12px 10px;
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  background: var(--color-surface);
+}
+
+.sidepanel-selection-action > div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-primary);
+  font-size: 10px;
+}
+
+.sidepanel-selection-action p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 10px;
+  line-height: 16px;
+}
+
+.sidepanel-selection-action input {
+  min-height: 34px;
+  padding: 6px 8px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 7px;
+  background: var(--color-surface);
+  font-size: 11px;
+}
+
+.sidepanel-selection-action > button {
+  justify-self: end;
+  min-height: 31px;
+  padding: 5px 9px;
+  border: 0;
+  border-radius: 7px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 10px;
+}
+
+.sidepanel-selection-action > span {
+  color: var(--color-text-muted);
+  font-size: 9px;
+}
+
+.sidepanel-page,
+.sidepanel-notes {
+  height: 100%;
+  padding: 18px 14px;
+  overflow-y: auto;
+}
+
+.sidepanel-section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.sidepanel-section-heading > div {
+  display: grid;
+  gap: 2px;
+}
+
+.sidepanel-section-heading span {
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+}
+
+.sidepanel-section-heading h2 {
+  margin: 0;
+  font-size: 17px;
+  line-height: 24px;
+}
+
+.sidepanel-connection {
+  position: relative;
+  padding-left: 11px;
+  color: var(--color-text-muted) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 9px !important;
+  letter-spacing: 0 !important;
+}
+
+.sidepanel-connection::before {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+  content: '';
+}
+
+.sidepanel-connection.is-connected::before {
+  background: var(--color-success);
+}
+
+.sidepanel-progress-card,
+.sidepanel-page-guidance,
+.sidepanel-notes blockquote,
+.sidepanel-notes form {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-surface);
+}
+
+.sidepanel-progress-card {
+  padding: 13px;
+}
+
+.sidepanel-progress-card > div:first-child {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sidepanel-progress-card strong {
+  font-size: 12px;
+}
+
+.sidepanel-progress-card > div:first-child span {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+}
+
+.sidepanel-progress-track {
+  height: 4px;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--color-surface-subtle);
+}
+
+.sidepanel-progress-track span {
+  display: block;
+  height: 100%;
+  background: var(--color-primary);
+}
+
+.sidepanel-progress-card > p {
+  margin: 10px 0 0;
+  color: var(--color-text-secondary);
+  font-size: 10px;
+  line-height: 17px;
+}
+
+.sidepanel-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.sidepanel-page-actions button {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 9px;
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: 10px;
+}
+
+.sidepanel-page-actions button.is-primary {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.sidepanel-page-actions button:hover:not(:disabled),
+.sidepanel-notes form button:hover:not(:disabled),
+.sidepanel-selection-action > button:hover:not(:disabled) {
+  border-color: var(--color-primary-hover);
+  background: var(--color-primary-hover);
+  color: #fff;
+}
+
+.sidepanel-page-guidance {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 10px;
+  padding: 11px;
+  color: var(--color-success);
+}
+
+.sidepanel-page-guidance > div {
+  display: grid;
+  gap: 3px;
+}
+
+.sidepanel-page-guidance strong {
+  color: var(--color-text);
+  font-size: 10px;
+}
+
+.sidepanel-page-guidance p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 9px;
+  line-height: 15px;
+}
+
+.sidepanel-notes blockquote {
+  display: grid;
+  gap: 5px;
+  max-height: 130px;
+  margin: 0 0 10px;
+  padding: 11px;
+  overflow-y: auto;
+  color: var(--color-text-secondary);
+  font-size: 10px;
+  line-height: 17px;
+}
+
+.sidepanel-notes blockquote span {
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: 8px;
+}
+
+.sidepanel-notes form {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+}
+
+.sidepanel-notes label {
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.sidepanel-notes textarea {
+  resize: vertical;
+  padding: 9px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 11px;
+  line-height: 18px;
+}
+
+.sidepanel-notes form button {
+  min-height: 34px;
+  justify-self: end;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 7px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 10px;
+}
+
+.sidepanel-notes > p {
+  color: var(--color-text-secondary);
+  font-size: 10px;
+}

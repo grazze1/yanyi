@@ -1,0 +1,10 @@
+packages:
+  - apps/*
+  - packages/*
+storeDir: .pnpm-store
+strictPeerDependencies: true
+autoInstallPeers: false
+allowBuilds:
+  esbuild: true
+overrides:
+  tsx: 4.23.4

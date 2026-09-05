@@ -1,0 +1,7 @@
+{
+  "name": "cn.yanyi.native_host",
+  "description": "Yanyi local translation native host",
+  "path": "${ABSOLUTE_VERSIONED_HOST_PATH}",
+  "type": "stdio",
+  "allowed_origins": ["chrome-extension://ajpiobadehjdkionkgfkpipjfgdgopjn/"]
+}

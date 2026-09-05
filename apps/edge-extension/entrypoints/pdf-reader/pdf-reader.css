@@ -1,0 +1,231 @@
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  margin: 0;
+  min-width: 980px;
+  min-height: 100%;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+body,
+button,
+input {
+  font-family: var(--font-sans);
+}
+button:focus-visible,
+input:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.pdf-shell > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.brand > span {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+}
+.brand strong,
+.brand small {
+  display: block;
+}
+.brand small {
+  max-width: 320px;
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.reader-actions,
+.reader-actions form,
+nav,
+.mode-group,
+.file-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.file-button,
+.reader-actions button,
+nav button {
+  min-height: 32px;
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  padding: 0 10px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.file-button input {
+  display: none;
+}
+.reader-actions input,
+.pdf-search input {
+  height: 32px;
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+  padding: 0 9px;
+}
+.pdf-shell > nav {
+  position: sticky;
+  z-index: 5;
+  top: 0;
+  min-height: 46px;
+  padding: 6px 14px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+nav svg {
+  width: 15px;
+}
+.mode-group {
+  margin-left: auto;
+}
+.mode-group button[aria-pressed='true'] {
+  border-color: #bfdbfe;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.pdf-search {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.pdf-search input {
+  width: 140px;
+}
+.found {
+  color: var(--color-success);
+  font-size: 10px;
+}
+.not-found {
+  color: var(--color-danger);
+  font-size: 10px;
+}
+.reader-grid {
+  display: grid;
+  gap: 18px;
+  align-items: start;
+  padding: 20px;
+}
+.reader-grid--source,
+.reader-grid--translation {
+  grid-template-columns: 1fr;
+}
+.reader-grid--bilingual {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 42%);
+}
+.page-column {
+  overflow: auto;
+  min-height: 70vh;
+}
+.page-surface {
+  position: relative;
+  width: max-content;
+  margin: 0 auto;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(15 23 42 / 12%);
+}
+.text-layer {
+  position: absolute;
+  inset: 0;
+  color: transparent;
+  line-height: 1;
+  user-select: text;
+}
+.text-layer span {
+  position: absolute;
+  white-space: pre;
+  transform-origin: 0 0;
+}
+.text-layer ::selection {
+  background: rgb(37 99 235 / 28%);
+}
+.translation-column {
+  min-height: 70vh;
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-surface);
+}
+.translation-column p {
+  white-space: pre-wrap;
+  line-height: 1.85;
+}
+.machine-label {
+  color: var(--color-text-muted);
+  font: 10px var(--font-mono);
+}
+.pdf-empty,
+.translation-empty {
+  display: flex;
+  min-height: 60vh;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+.pdf-empty strong {
+  color: var(--color-text);
+}
+.pdf-error,
+.pdf-loading {
+  margin: 12px 20px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  font-size: 12px;
+}
+.pdf-error {
+  border-color: #fecaca;
+  color: var(--color-danger);
+}
+.pdf-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.spin {
+  animation: spin 900ms linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

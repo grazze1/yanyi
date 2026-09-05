@@ -1,0 +1,17 @@
+{
+  "name": "@yanyi/test-fixtures",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@yanyi/shared-types": "workspace:*"
+  }
+}

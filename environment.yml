@@ -1,0 +1,8 @@
+name: yanyi-dev
+channels:
+  - conda-forge
+dependencies:
+  - nodejs=24
+  - pnpm=11
+  - python=3.12
+  - pip

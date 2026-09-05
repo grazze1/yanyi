@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="研译">
+  <rect width="512" height="512" rx="116" fill="#2563EB"/>
+  <path d="M128 132h256v48H128z" fill="#DBEAFE"/>
+  <text x="256" y="353" fill="#FFFFFF" font-family="Microsoft YaHei, sans-serif" font-size="250" font-weight="700" text-anchor="middle">研</text>
+</svg>

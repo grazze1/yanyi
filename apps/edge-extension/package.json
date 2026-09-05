@@ -1,0 +1,35 @@
+{
+  "name": "@yanyi/edge-extension",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wxt --browser edge",
+    "build": "wxt build --browser edge",
+    "build:chrome": "wxt build --browser chrome",
+    "build:test": "wxt build --browser edge --mode test",
+    "build:test:chrome": "wxt build --browser chrome --mode test",
+    "prepare": "wxt prepare",
+    "typecheck": "wxt prepare && tsc --noEmit"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "5.101.4",
+    "@yanyi/design-tokens": "workspace:*",
+    "@yanyi/protocol": "workspace:*",
+    "@yanyi/shared-types": "workspace:*",
+    "@yanyi/ui": "workspace:*",
+    "lucide-react": "1.28.0",
+    "pdfjs-dist": "5.4.624",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zustand": "5.0.14"
+  },
+  "devDependencies": {
+    "@yanyi/test-fixtures": "workspace:*",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "@wxt-dev/module-react": "1.2.2",
+    "wxt": "0.21.3"
+  }
+}

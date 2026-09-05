@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "bundle": {
+    "active": true,
+    "useLocalToolsDir": true,
+    "targets": ["nsis"],
+    "resources": ["resources/native-host/yanyi-native-host.exe"],
+    "windows": {
+      "nsis": {
+        "installerHooks": "./windows/hooks.nsh",
+        "languages": ["SimpChinese", "English"],
+        "displayLanguageSelector": false,
+        "startMenuFolder": "研译"
+      }
+    }
+  }
+}

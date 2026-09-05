@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f9fc" />
+    <title>研译设置</title>
+    <script type="module" src="./main.ts"></script>
+    <link rel="stylesheet" href="./options.css" />
+  </head>
+  <body>
+    <header>
+      <span class="logo" aria-hidden="true">研</span>
+      <div>
+        <h1>扩展设置与诊断</h1>
+        <p>敏感配置只在桌面端保存；浏览器扩展不持有 API Key。</p>
+      </div>
+    </header>
+    <main>
+      <section aria-labelledby="connection-title">
+        <div class="section-heading">
+          <div>
+            <h2 id="connection-title">本地服务</h2>
+            <p>Native Messaging 与数据库协议状态。</p>
+          </div>
+          <button id="refresh-status" type="button">重新检测</button>
+        </div>
+        <dl>
+          <div>
+            <dt>连接</dt>
+            <dd id="connection-value">检测中…</dd>
+          </div>
+          <div>
+            <dt>Host 版本</dt>
+            <dd id="host-version">—</dd>
+          </div>
+          <div>
+            <dt>数据库 Schema</dt>
+            <dd id="schema-version">—</dd>
+          </div>
+          <div>
+            <dt>协议</dt>
+            <dd id="protocol-version">—</dd>
+          </div>
+        </dl>
+        <p class="status-message" id="status-message" role="status"></p>
+      </section>
+      <section aria-labelledby="models-title">
+        <h2 id="models-title">任务模型预设</h2>
+        <div class="preset-grid">
+          <article><strong>整页翻译</strong><span>读取本地任务预设</span></article>
+          <article><strong>精确翻译</strong><span>允许单次覆盖</span></article>
+          <article><strong>解释 / 消歧</strong><span>按模型能力显示思考强度</span></article>
+          <article><strong>深度追问</strong><span>保持当前会话选择</span></article>
+        </div>
+        <p>模型列表与这些默认值可在桌面管理端修改；运行时会使用 <code>GET /models</code> 校验。</p>
+      </section>
+      <section aria-labelledby="privacy-title">
+        <h2 id="privacy-title">权限与隐私</h2>
+        <p>
+          网页访问使用 <code>activeTab</code>；URL PDF 仅在你主动授权对应来源后读取。API Key 使用
+          Windows DPAPI 加密。
+        </p>
+        <div class="button-row">
+          <button id="revoke-origins" type="button">撤销 PDF 来源权限</button
+          ><button id="open-pdf-reader" type="button">打开 PDF 阅读器</button>
+        </div>
+      </section>
+      <section aria-labelledby="help-title">
+        <h2 id="help-title">无法连接？</h2>
+        <ol>
+          <li>启动研译桌面管理端。</li>
+          <li>在“关于与诊断”确认 Native Host 注册。</li>
+          <li>重新检测；若仍失败，导出诊断报告。</li>
+        </ol>
+        <p>API Key 请在桌面端“模型与 API”页面配置，扩展不会显示或接收明文密钥。</p>
+      </section>
+    </main>
+  </body>
+</html>

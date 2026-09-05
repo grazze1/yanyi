@@ -1,0 +1,963 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://yanyi.local/schema/protocol-envelope-v1.json",
+  "title": "Yanyi Native Messaging protocol v1",
+  "description": "The canonical wire contract for the extension and Native Host. Payloads are versioned by message type and unknown fields are tolerated for forward compatibility.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocolVersion", "requestId", "type", "sequence", "done", "payload"],
+  "properties": {
+    "protocolVersion": { "const": 1 },
+    "requestId": { "type": "string", "format": "uuid" },
+    "type": {
+      "enum": [
+        "system.handshake.request",
+        "system.handshake.ready",
+        "system.error",
+        "request.cancel",
+        "translation.start",
+        "translation.accepted",
+        "translation.pause",
+        "translation.resume",
+        "translation.cancel",
+        "translation.segment.started",
+        "translation.segment.delta",
+        "translation.segment.completed",
+        "translation.segment.failed",
+        "translation.progress",
+        "translation.completed",
+        "translation.cancelled",
+        "translation.failed",
+        "translation.scan.report",
+        "translation.scan.report.ready",
+        "translation.batch.continue",
+        "assistant.start",
+        "assistant.accepted",
+        "assistant.cancel",
+        "assistant.delta",
+        "assistant.completed",
+        "assistant.cancelled",
+        "assistant.failed",
+        "conversation.get.request",
+        "conversation.get.ready",
+        "conversation.list.request",
+        "conversation.list.ready",
+        "conversation.rename.request",
+        "conversation.renamed",
+        "conversation.archive.request",
+        "conversation.archived",
+        "conversation.delete.request",
+        "conversation.deleted",
+        "conversation.site.active.get",
+        "conversation.site.active.set",
+        "conversation.site.new",
+        "conversation.site.active.ready",
+        "model.catalog.request",
+        "model.catalog.ready",
+        "model.selection.get",
+        "model.selection.ready",
+        "model.selection.set",
+        "model.selection.saved",
+        "model.capability.verify",
+        "model.capability.verified",
+        "glossary.quick-add",
+        "glossary.saved",
+        "note.create",
+        "note.created",
+        "site.policy.request",
+        "site.policy.ready"
+      ]
+    },
+    "sequence": { "type": "integer", "minimum": 0 },
+    "done": { "type": "boolean" },
+    "idempotencyKey": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "payload": { "type": "object" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "type": { "enum": ["translation.start", "translation.batch.continue"] } },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/translationStart" } } }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "translation.scan.report" } },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/translationScanReport" } } }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "translation.scan.report.ready" } },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/translationScanReportReady" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "assistant.start" } }, "required": ["type"] },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/assistantStart" } } }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "assistant.accepted",
+              "assistant.delta",
+              "assistant.completed",
+              "assistant.cancelled",
+              "assistant.failed"
+            ]
+          }
+        },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/assistantEvent" } } }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "conversation.list.request" } },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/conversationListRequest" } } }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "conversation.list.ready" } },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/conversationListReady" } } }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "conversation.get.request" } },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/conversationGetRequest" } } }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "conversation.get.ready" } },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/conversationGetReady" } } }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "conversation.rename.request" } },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/conversationRenameRequest" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "conversation.renamed" } }, "required": ["type"] },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/conversationRenamed" } } }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "conversation.archive.request" } },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/conversationArchive" } } }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "conversation.archived" } },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/conversationArchive" } } }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "conversation.delete.request" } },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/conversationDeleteRequest" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "conversation.deleted" } }, "required": ["type"] },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/conversationDeleted" } } }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "model.catalog.request" } },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/modelCatalogRequest" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "model.catalog.ready" } }, "required": ["type"] },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/modelCatalogReady" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "model.selection.get" } }, "required": ["type"] },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/modelSelectionRequest" } } }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "model.selection.ready" } },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/modelSelectionReady" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "model.selection.set" } }, "required": ["type"] },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/modelSelectionInput" } } }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "model.selection.saved" } },
+        "required": ["type"]
+      },
+      "then": { "properties": { "payload": { "$ref": "#/$defs/modelSelectionSaved" } } }
+    }
+  ],
+  "$defs": {
+    "translationSegment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["segmentId", "sourceText", "sourceHash", "placeholders", "priority"],
+      "properties": {
+        "segmentId": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "sourceText": { "type": "string", "minLength": 1, "maxLength": 1200 },
+        "sourceHash": { "type": "string", "minLength": 8, "maxLength": 64 },
+        "placeholders": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^__YANYI_[A-Z]+_[0-9]+__$" },
+          "maxItems": 80
+        },
+        "priority": { "type": "integer", "minimum": 0, "maximum": 9 },
+        "nodeId": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "partIndex": { "type": "integer", "minimum": 0 },
+        "partCount": { "type": "integer", "minimum": 1, "maximum": 1024 },
+        "domRole": {
+          "enum": [
+            "heading",
+            "paragraph",
+            "button",
+            "link",
+            "navigation",
+            "tag",
+            "table_cell",
+            "list_item",
+            "label",
+            "text"
+          ]
+        },
+        "componentId": { "type": "string", "minLength": 1, "maxLength": 160 }
+      }
+    },
+    "pageTranslationProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pageTitle",
+        "site",
+        "documentType",
+        "sectionHeadings",
+        "namedEntities",
+        "productNames",
+        "acronyms",
+        "protectedTerms",
+        "uiVocabulary"
+      ],
+      "properties": {
+        "pageTitle": { "type": "string", "maxLength": 500 },
+        "site": { "type": "string", "minLength": 1, "maxLength": 253 },
+        "documentType": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "detectedDomain": { "type": "string", "maxLength": 128 },
+        "sectionHeadings": { "$ref": "#/$defs/pageProfileItems" },
+        "namedEntities": { "$ref": "#/$defs/pageProfileItems" },
+        "productNames": { "$ref": "#/$defs/pageProfileItems" },
+        "acronyms": { "$ref": "#/$defs/pageProfileItems" },
+        "protectedTerms": { "$ref": "#/$defs/pageProfileItems" },
+        "uiVocabulary": { "$ref": "#/$defs/pageProfileItems" }
+      }
+    },
+    "pageProfileItems": {
+      "type": "array",
+      "maxItems": 64,
+      "items": { "type": "string", "minLength": 1, "maxLength": 240 }
+    },
+    "scanDiagnostics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "discoveredVisible",
+        "eligible",
+        "protected",
+        "ignored",
+        "queued",
+        "completed",
+        "failed",
+        "stale",
+        "overBudget",
+        "unsupported",
+        "cancelled",
+        "notScanned"
+      ],
+      "properties": {
+        "discoveredVisible": { "type": "integer", "minimum": 0 },
+        "eligible": { "type": "integer", "minimum": 0 },
+        "protected": { "type": "integer", "minimum": 0 },
+        "ignored": { "type": "integer", "minimum": 0 },
+        "queued": { "type": "integer", "minimum": 0 },
+        "completed": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 },
+        "stale": { "type": "integer", "minimum": 0 },
+        "overBudget": { "type": "integer", "minimum": 0 },
+        "unsupported": { "type": "integer", "minimum": 0 },
+        "cancelled": { "type": "integer", "minimum": 0 },
+        "notScanned": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "translationStart": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "taskId",
+        "tabId",
+        "frameId",
+        "pageSessionId",
+        "targetLanguage",
+        "promptVersion",
+        "glossaryVersion",
+        "translationMode",
+        "websiteRuleVersion",
+        "segments",
+        "profile"
+      ],
+      "properties": {
+        "taskId": { "type": "string", "format": "uuid" },
+        "tabId": { "type": "integer", "minimum": 0 },
+        "frameId": { "type": "integer", "minimum": 0 },
+        "pageSessionId": { "type": "string", "format": "uuid" },
+        "pageJobId": { "type": "string", "format": "uuid" },
+        "batchIndex": { "type": "integer", "minimum": 0 },
+        "finalBatch": { "type": "boolean" },
+        "scanDiagnostics": { "$ref": "#/$defs/scanDiagnostics" },
+        "pageProfile": { "$ref": "#/$defs/pageTranslationProfile" },
+        "sourceLanguage": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32,
+          "pattern": "\\S"
+        },
+        "targetLanguage": { "type": "string", "minLength": 2, "maxLength": 32 },
+        "promptVersion": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "domainId": { "type": "string", "maxLength": 128 },
+        "technicalTags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "\\S"
+          },
+          "maxItems": 16
+        },
+        "workspaceId": { "type": "string", "maxLength": 128 },
+        "siteDomain": { "type": "string", "maxLength": 253 },
+        "glossaryVersion": { "type": "integer", "minimum": 0 },
+        "translationMode": { "enum": ["replace", "below", "bilingual"] },
+        "websiteRuleVersion": { "type": "integer", "minimum": 0 },
+        "segments": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/translationSegment" },
+          "minItems": 1,
+          "maxItems": 160
+        },
+        "profile": { "$ref": "#/$defs/translationProfile" }
+      },
+      "allOf": [
+        {
+          "if": { "required": ["pageJobId"] },
+          "then": { "required": ["batchIndex"] }
+        },
+        {
+          "if": { "required": ["batchIndex"] },
+          "then": { "required": ["pageJobId"] }
+        },
+        {
+          "if": {
+            "properties": { "finalBatch": { "const": true } },
+            "required": ["finalBatch"]
+          },
+          "then": { "required": ["pageJobId", "batchIndex"] }
+        }
+      ]
+    },
+    "translationProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model", "thinking"],
+      "properties": {
+        "model": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "providerId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "apiProfileId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "thinking": { "enum": ["enabled", "disabled"] },
+        "reasoningEffort": { "enum": ["high", "max"] },
+        "maxOutputTokens": { "type": "integer", "minimum": 1, "maximum": 393216 },
+        "timeoutMs": { "type": "integer", "minimum": 1000, "maximum": 600000 },
+        "streaming": { "type": "boolean" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "thinking": { "const": "disabled" } }, "required": ["thinking"] },
+          "then": { "not": { "required": ["reasoningEffort"] } }
+        }
+      ]
+    },
+    "translationScanReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["taskId", "pageJobId", "pageSessionId", "diagnostics", "segmentStates"],
+      "properties": {
+        "taskId": { "$ref": "#/$defs/identifier" },
+        "pageJobId": { "$ref": "#/$defs/identifier" },
+        "pageSessionId": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "diagnostics": { "$ref": "#/$defs/scanDiagnostics" },
+        "segmentStates": {
+          "type": "object",
+          "maxProperties": 160,
+          "propertyNames": { "minLength": 1, "maxLength": 256 },
+          "additionalProperties": { "enum": ["failed", "stale", "cancelled"] }
+        }
+      }
+    },
+    "operationError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "message": { "type": "string", "maxLength": 2000 },
+        "recoverable": { "type": "boolean" },
+        "retryAfterMs": { "type": "integer", "minimum": 0, "maximum": 600000 }
+      }
+    },
+    "translationScanReportReady": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accepted"],
+      "properties": {
+        "accepted": { "type": "boolean" },
+        "pageJobId": { "$ref": "#/$defs/identifier" },
+        "state": {
+          "enum": ["queued", "running", "paused", "completed", "partial", "failed", "cancelled"]
+        },
+        "error": { "$ref": "#/$defs/operationError" }
+      }
+    },
+    "assistantContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selection"],
+      "properties": {
+        "selection": { "type": "string", "minLength": 1, "maxLength": 8000 },
+        "sentence": { "type": "string", "maxLength": 2000 },
+        "adjacentSentences": {
+          "type": "array",
+          "maxItems": 8,
+          "items": { "type": "string", "maxLength": 4000 }
+        },
+        "paragraph": { "type": "string", "maxLength": 20000 },
+        "heading": { "type": "string", "maxLength": 500 },
+        "sectionPath": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "type": "string", "maxLength": 500 }
+        },
+        "componentTitle": { "type": "string", "maxLength": 1000 },
+        "componentBody": { "type": "string", "maxLength": 20000 },
+        "labels": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "type": "string", "maxLength": 500 }
+        },
+        "buttons": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "type": "string", "maxLength": 500 }
+        },
+        "domRole": { "type": "string", "maxLength": 128 },
+        "domainId": { "type": "string", "maxLength": 128 },
+        "technicalTags": {
+          "type": "array",
+          "maxItems": 16,
+          "items": { "type": "string", "maxLength": 64 }
+        },
+        "glossaryRules": {
+          "type": "array",
+          "maxItems": 64,
+          "items": { "type": "string", "maxLength": 500 }
+        },
+        "contextHash": { "type": "string", "maxLength": 256 },
+        "title": { "type": "string", "maxLength": 500 },
+        "url": { "type": "string", "maxLength": 2048 },
+        "tabId": { "type": "integer", "minimum": 0, "maximum": 2147483647 },
+        "frameId": { "type": "integer", "minimum": 0, "maximum": 2147483647 },
+        "pageSessionId": { "type": "string", "maxLength": 160 },
+        "capturedAt": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "assistantTransientMessage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "content", "intent"],
+      "properties": {
+        "role": { "enum": ["user", "assistant"] },
+        "content": { "type": "string", "minLength": 1, "maxLength": 12000 },
+        "intent": { "enum": ["translate", "explain", "follow_up", "chat"] }
+      }
+    },
+    "assistantStart": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["taskId", "intent", "prompt", "context", "profile"],
+      "properties": {
+        "taskId": { "$ref": "#/$defs/identifier" },
+        "intent": { "enum": ["translate", "explain", "follow_up", "chat"] },
+        "prompt": { "type": "string", "maxLength": 8000 },
+        "context": { "$ref": "#/$defs/assistantContext" },
+        "profile": { "$ref": "#/$defs/translationProfile" },
+        "conversationId": { "$ref": "#/$defs/identifier" },
+        "knowledgeMode": { "enum": ["hybrid", "page_only", "general"] },
+        "workspaceId": { "$ref": "#/$defs/identifier" },
+        "transientMessages": {
+          "type": "array",
+          "maxItems": 12,
+          "items": { "$ref": "#/$defs/assistantTransientMessage" }
+        }
+      }
+    },
+    "assistantCitation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "excerpt", "source"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 1024 },
+        "excerpt": { "type": "string", "minLength": 1, "maxLength": 12000 },
+        "source": { "enum": ["page", "workspace", "general"] },
+        "locator": { "type": "string", "maxLength": 2048 }
+      }
+    },
+    "assistantUsage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["promptTokens", "completionTokens", "totalTokens"],
+      "properties": {
+        "promptTokens": { "type": "integer", "minimum": 0 },
+        "completionTokens": { "type": "integer", "minimum": 0 },
+        "totalTokens": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "assistantEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["taskId"],
+      "properties": {
+        "taskId": { "$ref": "#/$defs/identifier" },
+        "conversationId": {
+          "oneOf": [{ "$ref": "#/$defs/identifier" }, { "type": "null" }]
+        },
+        "messageId": { "$ref": "#/$defs/identifier" },
+        "knowledgeMode": { "enum": ["hybrid", "page_only", "general"] },
+        "delta": { "type": "string" },
+        "answer": { "type": "string" },
+        "historySaved": { "type": "boolean" },
+        "error": { "$ref": "#/$defs/operationError" },
+        "citations": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/assistantCitation" }
+        },
+        "usage": {
+          "oneOf": [{ "$ref": "#/$defs/assistantUsage" }, { "type": "null" }]
+        }
+      }
+    },
+    "identifier": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "nullableIdentifier": {
+      "oneOf": [{ "$ref": "#/$defs/identifier" }, { "type": "null" }]
+    },
+    "nullableString": {
+      "oneOf": [{ "type": "string" }, { "type": "null" }]
+    },
+    "conversationCitation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "messageId",
+        "sourceKind",
+        "sourceId",
+        "documentId",
+        "sectionId",
+        "sourceTitle",
+        "sourceExcerpt",
+        "locator",
+        "createdAt"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "messageId": { "$ref": "#/$defs/identifier" },
+        "sourceKind": { "enum": ["page", "workspace", "general_knowledge", "tool", "legacy"] },
+        "sourceId": { "$ref": "#/$defs/nullableIdentifier" },
+        "documentId": { "$ref": "#/$defs/nullableIdentifier" },
+        "sectionId": { "$ref": "#/$defs/nullableIdentifier" },
+        "sourceTitle": { "type": "string", "maxLength": 1024 },
+        "sourceExcerpt": { "type": "string", "maxLength": 12000 },
+        "locator": { "type": "object" },
+        "createdAt": { "type": "string", "minLength": 1 }
+      }
+    },
+    "conversationMessage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "conversationId",
+        "parentMessageId",
+        "role",
+        "content",
+        "contentTruncated",
+        "intent",
+        "contentFormat",
+        "generationStatus",
+        "modelId",
+        "thinkingEnabled",
+        "reasoningEffort",
+        "sequence",
+        "createdAt",
+        "updatedAt",
+        "citations"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "conversationId": { "$ref": "#/$defs/identifier" },
+        "parentMessageId": { "$ref": "#/$defs/nullableIdentifier" },
+        "role": { "enum": ["system", "user", "assistant", "tool"] },
+        "content": { "type": "string", "maxLength": 65536 },
+        "contentTruncated": { "type": "boolean" },
+        "intent": {
+          "oneOf": [{ "enum": ["translate", "explain", "follow_up", "chat"] }, { "type": "null" }]
+        },
+        "contentFormat": { "enum": ["markdown", "plain_text", "json"] },
+        "generationStatus": {
+          "enum": ["pending", "streaming", "completed", "failed", "cancelled"]
+        },
+        "modelId": { "$ref": "#/$defs/nullableIdentifier" },
+        "thinkingEnabled": { "type": "boolean" },
+        "reasoningEffort": {
+          "oneOf": [{ "enum": ["high", "max"] }, { "type": "null" }]
+        },
+        "sequence": { "type": "integer", "minimum": 0 },
+        "createdAt": { "type": "string", "minLength": 1 },
+        "updatedAt": { "type": "string", "minLength": 1 },
+        "citations": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/conversationCitation" }
+        }
+      }
+    },
+    "conversationRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "workspaceId",
+        "documentId",
+        "title",
+        "titleSource",
+        "status",
+        "lastMessageAt",
+        "knowledgeMode",
+        "currentModelId",
+        "archivedAt",
+        "createdAt",
+        "updatedAt",
+        "lastMessage"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "workspaceId": { "$ref": "#/$defs/nullableIdentifier" },
+        "documentId": { "$ref": "#/$defs/nullableIdentifier" },
+        "title": { "type": "string", "maxLength": 200 },
+        "titleSource": { "enum": ["pending", "auto", "user", "legacy"] },
+        "status": { "enum": ["active", "archived", "legacy"] },
+        "lastMessageAt": { "$ref": "#/$defs/nullableString" },
+        "knowledgeMode": { "enum": ["hybrid", "page_only", "general"] },
+        "currentModelId": { "$ref": "#/$defs/nullableIdentifier" },
+        "archivedAt": { "$ref": "#/$defs/nullableString" },
+        "createdAt": { "type": "string", "minLength": 1 },
+        "updatedAt": { "type": "string", "minLength": 1 },
+        "lastMessage": { "type": "string", "maxLength": 500 }
+      }
+    },
+    "conversationDetail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "conversation",
+        "messages",
+        "messageOffset",
+        "messageLimit",
+        "totalMessages",
+        "hasMore"
+      ],
+      "properties": {
+        "conversation": { "$ref": "#/$defs/conversationRecord" },
+        "messages": {
+          "type": "array",
+          "maxItems": 200,
+          "items": { "$ref": "#/$defs/conversationMessage" }
+        },
+        "messageOffset": { "type": "integer", "minimum": 0 },
+        "messageLimit": { "type": "integer", "minimum": 1, "maximum": 200 },
+        "totalMessages": { "type": "integer", "minimum": 0 },
+        "hasMore": { "type": "boolean" }
+      }
+    },
+    "conversationListRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "search": { "type": "string", "maxLength": 500 },
+        "status": { "enum": ["active", "archived", "legacy"] },
+        "offset": { "type": "integer", "minimum": 0 },
+        "limit": { "type": "integer", "minimum": 1, "maximum": 200 }
+      }
+    },
+    "conversationListReady": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conversations"],
+      "properties": {
+        "conversations": {
+          "type": "array",
+          "maxItems": 200,
+          "items": { "$ref": "#/$defs/conversationRecord" }
+        }
+      }
+    },
+    "conversationGetRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conversationId"],
+      "properties": {
+        "conversationId": { "$ref": "#/$defs/identifier" },
+        "messageOffset": { "type": "integer", "minimum": 0 },
+        "messageLimit": { "type": "integer", "minimum": 1, "maximum": 200 }
+      }
+    },
+    "conversationGetReady": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conversation"],
+      "properties": { "conversation": { "$ref": "#/$defs/conversationDetail" } }
+    },
+    "conversationRenameRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conversationId", "title"],
+      "properties": {
+        "conversationId": { "$ref": "#/$defs/identifier" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200, "pattern": "\\S" }
+      }
+    },
+    "conversationRenamed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conversationId", "title"],
+      "properties": {
+        "conversationId": { "$ref": "#/$defs/identifier" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 }
+      }
+    },
+    "conversationArchive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conversationId", "archived"],
+      "properties": {
+        "conversationId": { "$ref": "#/$defs/identifier" },
+        "archived": { "type": "boolean" }
+      }
+    },
+    "conversationDeleteRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conversationId", "confirmed"],
+      "properties": {
+        "conversationId": { "$ref": "#/$defs/identifier" },
+        "confirmed": { "const": true }
+      }
+    },
+    "conversationDeleted": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conversationId"],
+      "properties": { "conversationId": { "$ref": "#/$defs/identifier" } }
+    },
+    "modelCatalogRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "providerId": { "$ref": "#/$defs/identifier" },
+        "refresh": { "type": "boolean" }
+      }
+    },
+    "modelCatalogEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "providerId",
+        "modelId",
+        "owner",
+        "availability",
+        "capabilityStatus",
+        "supportsThinking",
+        "reasoningEffortsJson",
+        "supportsStreaming",
+        "supportsJsonOutput",
+        "supportsTools",
+        "contextWindow",
+        "metadataJson",
+        "lastSeenAt",
+        "createdAt",
+        "updatedAt"
+      ],
+      "properties": {
+        "providerId": { "$ref": "#/$defs/identifier" },
+        "modelId": { "$ref": "#/$defs/identifier" },
+        "owner": { "type": "string", "maxLength": 256 },
+        "availability": { "enum": ["available", "unavailable", "unknown"] },
+        "capabilityStatus": { "enum": ["verified", "unverified", "manual"] },
+        "supportsThinking": { "type": ["boolean", "null"] },
+        "reasoningEffortsJson": { "type": "string", "maxLength": 1024 },
+        "supportsStreaming": { "type": ["boolean", "null"] },
+        "supportsJsonOutput": { "type": ["boolean", "null"] },
+        "supportsTools": { "type": ["boolean", "null"] },
+        "contextWindow": { "type": ["integer", "null"], "minimum": 1 },
+        "metadataJson": { "type": "string" },
+        "lastSeenAt": { "$ref": "#/$defs/nullableString" },
+        "createdAt": { "type": "string", "minLength": 1 },
+        "updatedAt": { "type": "string", "minLength": 1 }
+      }
+    },
+    "modelCatalogReady": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["providerId", "models"],
+      "properties": {
+        "providerId": { "$ref": "#/$defs/identifier" },
+        "models": {
+          "type": "array",
+          "maxItems": 500,
+          "items": { "$ref": "#/$defs/modelCatalogEntry" }
+        }
+      }
+    },
+    "modelSelectionRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task"],
+      "properties": {
+        "conversationId": { "$ref": "#/$defs/identifier" },
+        "task": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "modelSelectionInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "scopeId", "task", "providerId", "modelId", "thinkingEnabled"],
+      "properties": {
+        "scope": { "enum": ["global", "task", "conversation"] },
+        "scopeId": { "$ref": "#/$defs/identifier" },
+        "task": { "$ref": "#/$defs/identifier" },
+        "providerId": { "$ref": "#/$defs/identifier" },
+        "apiProfileId": { "$ref": "#/$defs/identifier" },
+        "modelId": { "$ref": "#/$defs/identifier" },
+        "thinkingEnabled": { "type": "boolean" },
+        "reasoningEffort": { "enum": ["high", "max"] }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "thinkingEnabled": { "const": false } },
+            "required": ["thinkingEnabled"]
+          },
+          "then": { "not": { "required": ["reasoningEffort"] } }
+        }
+      ]
+    },
+    "modelSelectionRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope",
+        "scopeId",
+        "task",
+        "providerId",
+        "apiProfileId",
+        "modelId",
+        "thinkingEnabled",
+        "reasoningEffort",
+        "updatedAt"
+      ],
+      "properties": {
+        "scope": { "enum": ["global", "task", "conversation"] },
+        "scopeId": { "$ref": "#/$defs/identifier" },
+        "task": { "$ref": "#/$defs/identifier" },
+        "providerId": { "$ref": "#/$defs/identifier" },
+        "apiProfileId": { "$ref": "#/$defs/nullableIdentifier" },
+        "modelId": { "$ref": "#/$defs/identifier" },
+        "thinkingEnabled": { "type": "boolean" },
+        "reasoningEffort": {
+          "oneOf": [{ "enum": ["high", "max"] }, { "type": "null" }]
+        },
+        "updatedAt": { "type": "string", "minLength": 1 }
+      }
+    },
+    "modelSelectionSaved": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope",
+        "scopeId",
+        "task",
+        "providerId",
+        "apiProfileId",
+        "modelId",
+        "thinkingEnabled",
+        "reasoningEffort"
+      ],
+      "properties": {
+        "scope": { "enum": ["global", "task", "conversation"] },
+        "scopeId": { "$ref": "#/$defs/identifier" },
+        "task": { "$ref": "#/$defs/identifier" },
+        "providerId": { "$ref": "#/$defs/identifier" },
+        "apiProfileId": { "$ref": "#/$defs/nullableIdentifier" },
+        "modelId": { "$ref": "#/$defs/identifier" },
+        "thinkingEnabled": { "type": "boolean" },
+        "reasoningEffort": {
+          "oneOf": [{ "enum": ["high", "max"] }, { "type": "null" }]
+        }
+      }
+    },
+    "modelSelectionReady": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selection"],
+      "properties": {
+        "selection": {
+          "oneOf": [{ "$ref": "#/$defs/modelSelectionRecord" }, { "type": "null" }]
+        }
+      }
+    }
+  }
+}
