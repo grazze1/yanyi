@@ -16,12 +16,25 @@
 
 ## 快速开始
 
-1. 进入隔离环境：`powershell -ExecutionPolicy Bypass -File .\scripts\Enter-YanyiDev.ps1`。
-2. 安装依赖：`pnpm install --frozen-lockfile`。
-3. 构建：`pnpm build`。
-4. 在 `edge://extensions` 或 `chrome://extensions` 开启开发者模式，加载对应 `.output/*-mv3` 目录。
-5. 以普通用户运行 `scripts\Install-NativeHost.ps1` 注册 Native Host。
-6. 在桌面端“模型与 API”安全保存配置，或运行 `scripts\Set-DeepSeekApiKey.ps1`。
+需要 Windows、Conda、Microsoft C++ Build Tools（C++ 桌面开发与 Windows SDK）和
+WebView2。首次开发环境配置见 [源码安装](docs/source-setup.md)。
+
+在项目根目录的同一个 PowerShell 会话中执行：
+
+```powershell
+& .\scripts\Enter-YanyiDev.ps1
+pnpm install --frozen-lockfile
+pnpm build
+pnpm build:chrome
+cargo build -p native-host --release
+& .\scripts\Install-NativeHost.ps1 -Browser Edge
+pnpm dev:desktop
+```
+
+在 `edge://extensions` 开启开发者模式，加载
+`apps/edge-extension/.output/edge-mv3`。Chrome 使用 `-Browser Chrome` 注册，并加载
+`apps/edge-extension/.output/chrome-mv3`。在桌面端“模型与 API”保存 API 配置。
+完成配置后，浏览器会按需启动 Native Host 和本地数据库，无需一直打开桌面窗口。
 
 完整说明见 [用户手册](docs/user-guide.md)、[开发架构](docs/architecture.md)、[测试](docs/testing.md) 与 [发布](docs/release.md)。
 

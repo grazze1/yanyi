@@ -2,7 +2,7 @@
 
 > 日期：2026-09-05
 >
-> 本地工作分支：`codex/final-remediation`
+> 发布工作分支：`main`；原开发历史保存在 `codex/final-remediation`
 >
 > 目标仓库：`grazze1/yanyi`，默认分支 `main`
 
@@ -30,6 +30,9 @@
 - [x] 当前发布树密钥、凭据 URL、个人路径、个人邮箱、数据库、日志和私钥扫描。
 - [x] Apache-2.0 LICENSE、Cargo/npm SPDX 元数据、README、第三方声明。
 - [x] GitHub Actions 最小权限与不可变 commit 固定；Dependabot 配置。
-- [ ] 创建公开仓库、推送 `main`、检查远端文件树和 CI。
+- [x] 创建公开仓库并推送 `main`；远端识别为 Apache-2.0，已启用私密漏洞报告。
+- [x] Windows CI 已触发并进入运行；最终状态见仓库 Actions 页面。
+
+仓库：[grazze1/yanyi](https://github.com/grazze1/yanyi)。
 
 完整审计结论见 `docs/reports/publication-audit-2026-09-05.md`。
