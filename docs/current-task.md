@@ -31,7 +31,7 @@
 - [x] Apache-2.0 LICENSE、Cargo/npm SPDX 元数据、README、第三方声明。
 - [x] GitHub Actions 最小权限与不可变 commit 固定；Dependabot 配置。
 - [x] 创建公开仓库并推送 `main`；远端识别为 Apache-2.0，已启用私密漏洞报告。
-- [x] Windows CI 已触发并进入运行；最终状态见仓库 Actions 页面。
+- [x] Windows CI 全部通过（2026-09-06 核验）：[运行 33967033723](https://github.com/grazze1/yanyi/actions/runs/33967033723)，对应提交 `ac7aecf`。
 
 仓库：[grazze1/yanyi](https://github.com/grazze1/yanyi)。
 

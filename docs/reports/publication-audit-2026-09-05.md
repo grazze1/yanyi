@@ -47,9 +47,11 @@ Dependabot 跟随 Tauri 上游升级。
 ## 公开发布边界
 
 仓库已发布到 [grazze1/yanyi](https://github.com/grazze1/yanyi)，可见性为 PUBLIC，
-默认分支为 `main`。GitHub 已识别 Apache-2.0，并启用私密漏洞报告。首次 Windows CI
-已启动；远端运行结果以 [Actions](https://github.com/grazze1/yanyi/actions) 为准，
-上表记录的是本地执行结果。
+默认分支为 `main`。GitHub 已识别 Apache-2.0，并启用私密漏洞报告。
+2026-09-06 已核验 [Windows CI 33967033723](https://github.com/grazze1/yanyi/actions/runs/33967033723)
+全部成功，对应提交 `ac7aecf`。远端通过格式、ESLint、strict TypeScript、Vitest、
+Edge/Chrome 构建、前端产物审计、rustfmt、Clippy 和 Cargo 测试。
+上表的 Native Host、Playwright 与依赖安全审计记录来自本地执行。
 
 发布后的文档修订以普通后续提交追加，公开历史从经审计的根提交开始。
 
